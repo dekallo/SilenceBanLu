@@ -1,5 +1,7 @@
 # SilenceBanLu
 
+A WoW Addon.
+
 Turns Ban-Lu into a regular mount, without all the extra stuff.
 
 Features:
