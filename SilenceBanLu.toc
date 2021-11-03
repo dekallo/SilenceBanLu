@@ -1,5 +1,5 @@
-## Interface: 90100
-## Version: 4
+## Interface: 90105
+## Version: 5
 ## Author: dekallo
 ## Title: Silence, Ban-Lu
 ## Notes: Prevents Ban-Lu from playing sounds, printing to chat, or making speech bubbles
