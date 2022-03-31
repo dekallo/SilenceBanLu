@@ -6,14 +6,14 @@ end
 
 -- mute Ban-Lu's sound files
 MuteSoundFile(1593212)
-MuteSoundFile(1593213)	
-MuteSoundFile(1593214)	
-MuteSoundFile(1593215)	
+MuteSoundFile(1593213)
+MuteSoundFile(1593214)
+MuteSoundFile(1593215)
 MuteSoundFile(1593216)
-MuteSoundFile(1593217)	
+MuteSoundFile(1593217)
 MuteSoundFile(1593218)
 MuteSoundFile(1593219)
-MuteSoundFile(1593220)	
+MuteSoundFile(1593220)
 MuteSoundFile(1593221)
 MuteSoundFile(1593222)
 MuteSoundFile(1593223)
@@ -21,7 +21,7 @@ MuteSoundFile(1593224)
 MuteSoundFile(1593225)
 MuteSoundFile(1593226)
 MuteSoundFile(1593227)
-MuteSoundFile(1593228)	
+MuteSoundFile(1593228)
 MuteSoundFile(1593229)
 MuteSoundFile(1593236)
 
@@ -31,14 +31,14 @@ local banLuMessages = {}
 -- returns the text contained within a currently displayed chat bubble
 local function getChatBubbleText(chatBubble)
   -- get chat bubble frame
-	local chatBubbleFrame = select(1, chatBubble:GetChildren())
-	for i = 1, chatBubbleFrame:GetNumRegions() do
+  local chatBubbleFrame = select(1, chatBubble:GetChildren())
+  for i = 1, chatBubbleFrame:GetNumRegions() do
     local region = select(i, chatBubbleFrame:GetRegions())
     -- only the bubble region with text will have ObjectType == FontString
     if region:GetObjectType() == "FontString" then
-			return region:GetText()
-		end
-	end
+      return region:GetText()
+    end
+  end
 end
 
 -- check an individual bubble to see if Ban-Lu is talking
@@ -52,22 +52,22 @@ local function checkChatBubble(chatBubble)
     -- this bubble isn't hidden already, and Ban-Lu said the line contained within, hide the frame
     local chatBubbleFrame = select(1, chatBubble:GetChildren())
     chatBubbleFrame:Hide()
-	  chatBubble.banlu = true
+    chatBubble.banlu = true
   elseif author ~= "Ban-Lu" and chatBubble.banlu then
     -- the author is not Ban-Lu but the frame is hidden, show the frame
     local chatBubbleFrame = select(1, chatBubble:GetChildren())
     chatBubbleFrame:Show()
     chatBubble.banlu = nil
-	end
+  end
 end
 
 -- iterate through all bubbles we're allowed to modify and check each one
 local function checkChatBubbles(chatBubbles)
-	for _, chatBubble in pairs(chatBubbles) do
-		if not chatBubble:IsForbidden() then
+  for _, chatBubble in pairs(chatBubbles) do
+    if not chatBubble:IsForbidden() then
       checkChatBubble(chatBubble)
-		end
-	end
+    end
+  end
 end
 
 -- a Frame to watch speech bubbles and hide anything said by Ban-Lu
@@ -75,8 +75,8 @@ local BubbleWatcher = CreateFrame("Frame", nil, WorldFrame)
 BubbleWatcher:SetFrameStrata("TOOLTIP")
 -- function to reset the watcher
 BubbleWatcher.Reset = function(self)
-	self:Hide()
-	self.elapsed = 0
+  self:Hide()
+  self.elapsed = 0
 end
 -- init
 BubbleWatcher:Reset()
@@ -86,9 +86,9 @@ BubbleWatcher:SetScript("OnUpdate", function(self, elapsed)
   self.elapsed = self.elapsed + elapsed
   -- have to wait because bubbles show up the frame after the chat event
   if self.elapsed > 0.01 then
-		self:Reset()
-		checkChatBubbles(C_ChatBubbles:GetAllChatBubbles())
-	end
+    self:Reset()
+    checkChatBubbles(C_ChatBubbles:GetAllChatBubbles())
+  end
 end)
 
 -- filter Ban-Lu's spam from chat, and any chat bubbles he might produce
