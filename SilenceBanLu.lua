@@ -1,3 +1,6 @@
+-- globals
+local UnitClass, DisableAddOn, MuteSoundFile, ChatFrame_AddMessageEventFilter = UnitClass, DisableAddOn, MuteSoundFile, ChatFrame_AddMessageEventFilter
+
 -- disable the addon for non-Monk players
 if select(2, UnitClass('player')) ~= "MONK" then
   DisableAddOn("SilenceBanLu")
