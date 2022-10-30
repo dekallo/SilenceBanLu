@@ -7,8 +7,11 @@ ignore = {
     "212/self"
 }
 globals = {
+    "CreateFrame",
+    "C_ChatBubbles",
     "UnitClass",
     "DisableAddOn",
     "MuteSoundFile",
-    "ChatFrame_AddMessageEventFilter"
+    "ChatFrame_AddMessageEventFilter",
+    "WorldFrame"
 }
