@@ -3,6 +3,8 @@
 ## Author: dekallo
 ## Title: Silence, Ban-Lu
 ## Notes: Prevents Ban-Lu from playing sounds, printing to chat, or making speech bubbles
+## IconTexture: Interface\AddOns\SilenceBanLu\icon
+## X-Website: https://www.curseforge.com/wow/addons/silence-ban-lu
 ## X-Curse-Project-ID: 419848
 ## X-Wago-ID: 7x61eB61
 ## X-WoWI-ID: 26183
