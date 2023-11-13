@@ -12,6 +12,7 @@ globals = {
     "ChatFrame_AddMessageEventFilter",
     "CreateFrame",
     "MuteSoundFile",
-    "UnitClass",
+    "UnitClassBase",
+    "UnitName",
     "WorldFrame"
 }

@@ -1,9 +1,11 @@
+local addonName = ...
+
 -- globals
-local CreateFrame, C_ChatBubbles, UnitClass, C_AddOns, MuteSoundFile, ChatFrame_AddMessageEventFilter, WorldFrame = CreateFrame, C_ChatBubbles, UnitClass, C_AddOns, MuteSoundFile, ChatFrame_AddMessageEventFilter, WorldFrame
+local CreateFrame, C_ChatBubbles, UnitClassBase, C_AddOns, UnitName, MuteSoundFile, ChatFrame_AddMessageEventFilter, WorldFrame = CreateFrame, C_ChatBubbles, UnitClassBase, C_AddOns, UnitName, MuteSoundFile, ChatFrame_AddMessageEventFilter, WorldFrame
 
 -- disable the addon for non-Monk players
-if select(2, UnitClass('player')) ~= "MONK" then
-	C_AddOns.DisableAddOn("SilenceBanLu")
+if UnitClassBase("player") ~= "MONK" then
+	C_AddOns.DisableAddOn(addonName, UnitName("player"))
 	return
 end
 
@@ -34,7 +36,7 @@ local banLuMessages = {}
 -- returns the text contained within a currently displayed chat bubble
 local function getChatBubbleText(chatBubble)
 	-- get chat bubble frame
-	local chatBubbleFrame = select(1, chatBubble:GetChildren())
+	local chatBubbleFrame = chatBubble:GetChildren()
 	for i = 1, chatBubbleFrame:GetNumRegions() do
 		local region = select(i, chatBubbleFrame:GetRegions())
 		-- only the bubble region with text will have ObjectType == FontString
