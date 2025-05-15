@@ -11,6 +11,7 @@ globals = {
     "C_ChatBubbles",
     "ChatFrame_AddMessageEventFilter",
     "CreateFrame",
+    "GetLocale",
     "MuteSoundFile",
     "UnitClassBase",
     "UnitName",
