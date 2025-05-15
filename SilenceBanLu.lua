@@ -1,7 +1,7 @@
 local addonName = ...
 
 -- globals
-local CreateFrame, C_ChatBubbles, UnitClassBase, C_AddOns, UnitName, MuteSoundFile, ChatFrame_AddMessageEventFilter, WorldFrame, GetLocale = CreateFrame, C_ChatBubbles, UnitClassBase, C_AddOns, UnitName, MuteSoundFile, ChatFrame_AddMessageEventFilter, WorldFrame, GetLocale
+local CreateFrame, C_ChatBubbles, UnitClassBase, C_AddOns, UnitName, MuteSoundFile, ChatFrame_AddMessageEventFilter, GetLocale = CreateFrame, C_ChatBubbles, UnitClassBase, C_AddOns, UnitName, MuteSoundFile, ChatFrame_AddMessageEventFilter, GetLocale
 
 -- disable the addon for non-Monk players
 if UnitClassBase("player") ~= "MONK" then
@@ -95,8 +95,7 @@ local function checkChatBubbles(chatBubbles)
 end
 
 -- a Frame to watch speech bubbles and hide anything said by Ban-Lu
-local BubbleWatcher = CreateFrame("Frame", nil, WorldFrame)
-BubbleWatcher:SetFrameStrata("TOOLTIP")
+local BubbleWatcher = CreateFrame("Frame")
 -- function to reset the watcher
 BubbleWatcher.Reset = function(self)
 	self:Hide()

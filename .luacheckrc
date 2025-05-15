@@ -14,6 +14,5 @@ globals = {
     "GetLocale",
     "MuteSoundFile",
     "UnitClassBase",
-    "UnitName",
-    "WorldFrame"
+    "UnitName"
 }
