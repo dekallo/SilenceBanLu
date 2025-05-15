@@ -3,6 +3,17 @@ local addonName = ...
 -- globals
 local CreateFrame, C_ChatBubbles, UnitClassBase, C_AddOns, UnitName, MuteSoundFile, ChatFrame_AddMessageEventFilter, WorldFrame = CreateFrame, C_ChatBubbles, UnitClassBase, C_AddOns, UnitName, MuteSoundFile, ChatFrame_AddMessageEventFilter, WorldFrame
 
+-- localization
+local authorLocalization = {
+	[0] = "Ban-Lu",
+	["frFR"] = "Ban Lu"
+}
+local getAuthorName = function()
+	local locale = GetLocale()
+	local name = authorLocalization[locale] or authorLocalization[0]
+	return name
+end
+
 -- disable the addon for non-Monk players
 if UnitClassBase("player") ~= "MONK" then
 	C_AddOns.DisableAddOn(addonName, UnitName("player"))
@@ -53,12 +64,12 @@ local function checkChatBubble(chatBubble)
 	-- only Ban-Lu's messages will be in this table (author will always be Ban-Lu)
 	local author = banLuMessages[message]
 
-	if author == "Ban-Lu" and not chatBubble.banlu then
+	if author == getAuthorName() and not chatBubble.banlu then
 		-- this bubble isn't hidden already, and Ban-Lu said the line contained within, hide the frame
 		local chatBubbleFrame = select(1, chatBubble:GetChildren())
 		chatBubbleFrame:Hide()
 		chatBubble.banlu = true
-	elseif author ~= "Ban-Lu" and chatBubble.banlu then
+	elseif author ~= getAuthorName() and chatBubble.banlu then
 		-- the author is not Ban-Lu but the frame is hidden, show the frame
 		local chatBubbleFrame = select(1, chatBubble:GetChildren())
 		chatBubbleFrame:Show()
@@ -98,7 +109,7 @@ end)
 
 -- filter Ban-Lu's spam from chat, and any chat bubbles he might produce
 local function maybeBanLuFilter(_, _, message, author, ...)
-	if author == "Ban-Lu" then
+	if author == getAuthorName() then
 		banLuMessages[message] = author
 		BubbleWatcher:Show()
 		-- returning true filters the message from chat
