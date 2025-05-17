@@ -66,12 +66,8 @@ BubbleWatcher:Reset()
 function BubbleWatcher:GetChatBubbleText(chatBubble)
 	-- get the chat bubble frame (there will only ever be one child)
 	local chatBubbleFrame = chatBubble:GetChildren()
-	for i = 1, chatBubbleFrame:GetNumRegions() do
-		local region = select(i, chatBubbleFrame:GetRegions())
-		-- only the bubble region with text will be a FontString
-		if region:GetObjectType() == "FontString" then
-			return region:GetText()
-		end
+	if chatBubbleFrame.String then
+		return chatBubbleFrame.String:GetText()
 	end
 end
 
@@ -98,7 +94,7 @@ BubbleWatcher:SetScript("OnUpdate", function(self, elapsed)
 	if self.elapsed > 0.01 then
 		self:Reset()
 		-- iterate through all bubbles we're allowed to modify and check each one
-		for _, chatBubble in pairs(C_ChatBubbles:GetAllChatBubbles()) do
+		for _, chatBubble in pairs(C_ChatBubbles.GetAllChatBubbles()) do
 			if not chatBubble:IsForbidden() then
 				self:CheckChatBubble(chatBubble)
 			end
@@ -112,6 +108,7 @@ do
 	-- filter Ban-Lu's spam from chat, and any chat bubbles he might produce
 	local function maybeBanLuFilter(_, _, message, author, ...)
 		if author == banLuName then
+			-- store the message to check in BubbleWatcher:CheckChatBubble
 			banLuMessages[message] = true
 			BubbleWatcher:Show()
 			-- returning true filters the message from chat
