@@ -110,35 +110,39 @@ BubbleWatcher:SetScript("OnUpdate", function(self, elapsed)
 	end
 end)
 
--- filter Ban-Lu's spam from chat, and any chat bubbles he might produce
-local function maybeBanLuFilter(_, _, message, author, ...)
-	if author == banLuName then
-		banLuMessages[message] = true
+
+-- hook chat events
+do
+	-- filter Ban-Lu's spam from chat, and any chat bubbles he might produce
+	local function maybeBanLuFilter(_, _, message, author, ...)
+		if author == banLuName then
+			banLuMessages[message] = true
+			BubbleWatcher:Show()
+			-- returning true filters the message from chat
+			return true
+		end
+
+		-- a monster who isn't Ban-Lu is talking
+		banLuMessages[message] = nil
 		BubbleWatcher:Show()
-		-- returning true filters the message from chat
-		return true
+		return false, message, author, ...
 	end
 
-	-- a monster who isn't Ban-Lu is talking
-	banLuMessages[message] = nil
-	BubbleWatcher:Show()
-	return false, message, author, ...
+	-- we have to make sure to force show all chat bubbles that aren't Ban-Lu
+	-- previous chat bubbles get re-used for new chats and they retain their state
+	local function notBanLuFilter(_, _, message, ...)
+		-- nil out any table entry for this message, in case someone who isn't Ban-Lu wants to say one of his lines, I guess... lol
+		banLuMessages[message] = nil
+		BubbleWatcher:Show()
+		return false, message, ...
+	end
+
+	-- Ban-Lu is a monster so he talks in MONSTER_SAY
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_MONSTER_SAY", maybeBanLuFilter)
+
+	-- the chat events which can create bubbles which are guaranteed not to be Ban-Lu
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_SAY", notBanLuFilter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY", notBanLuFilter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_YELL", notBanLuFilter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_MONSTER_YELL", notBanLuFilter)
 end
-
--- Ban-Lu is a monster so he talks in MONSTER_SAY
-ChatFrame_AddMessageEventFilter("CHAT_MSG_MONSTER_SAY", maybeBanLuFilter)
-
--- we have to make sure to force show all chat bubbles that aren't Ban-Lu
--- previous chat bubbles get re-used for new chats and they retain their state
-local function notBanLuFilter(_, _, message, ...)
-	-- nil out any table entry for this message, in case someone who isn't Ban-Lu wants to say one of his lines, I guess... lol
-	banLuMessages[message] = nil
-	BubbleWatcher:Show()
-	return false, message, ...
-end
-
--- the chat events which can create bubbles which are guaranteed not to be Ban-Lu
-ChatFrame_AddMessageEventFilter("CHAT_MSG_SAY", notBanLuFilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY", notBanLuFilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_YELL", notBanLuFilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_MONSTER_YELL", notBanLuFilter)
