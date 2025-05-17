@@ -52,9 +52,19 @@ MuteSoundFile(1593236)
 -- things Ban-Lu says (key: message, value: true)
 local banLuMessages = {}
 
+-- a Frame to watch speech bubbles and hide anything said by Ban-Lu
+local BubbleWatcher = CreateFrame("Frame")
+
+-- hides the watcher, preventing the OnUpdate function from running until the next BubbleWatcher:Show()
+function BubbleWatcher:Reset()
+	self:Hide()
+	self.elapsed = 0
+end
+BubbleWatcher:Reset()
+
 -- returns the text contained within a currently displayed chat bubble
-local function getChatBubbleText(chatBubble)
-	-- get chat bubble frame
+function BubbleWatcher:GetChatBubbleText(chatBubble)
+	-- get the chat bubble frame (there will only ever be one child)
 	local chatBubbleFrame = chatBubble:GetChildren()
 	for i = 1, chatBubbleFrame:GetNumRegions() do
 		local region = select(i, chatBubbleFrame:GetRegions())
@@ -66,39 +76,20 @@ local function getChatBubbleText(chatBubble)
 end
 
 -- check an individual bubble to see if Ban-Lu is talking
-local function checkChatBubble(chatBubble)
-	local message = getChatBubbleText(chatBubble)
+function BubbleWatcher:CheckChatBubble(chatBubble)
+	local message = self:GetChatBubbleText(chatBubble)
 	if banLuMessages[message] and not chatBubble.banLu then
-		-- this bubble isn't hidden already, and Ban-Lu said the line contained within, hide the frame
+		chatBubble.banLu = true
+		-- this bubble isn't hidden already and Ban-Lu said the line contained within, hide the frame
 		local chatBubbleFrame = chatBubble:GetChildren()
 		chatBubbleFrame:Hide()
-		chatBubble.banLu = true
 	elseif not banLuMessages[message] and chatBubble.banLu then
+		chatBubble.banLu = nil
 		-- the author is not Ban-Lu but the frame is hidden, show the frame
 		local chatBubbleFrame = chatBubble:GetChildren()
 		chatBubbleFrame:Show()
-		chatBubble.banLu = nil
 	end
 end
-
--- iterate through all bubbles we're allowed to modify and check each one
-local function checkChatBubbles(chatBubbles)
-	for _, chatBubble in pairs(chatBubbles) do
-		if not chatBubble:IsForbidden() then
-			checkChatBubble(chatBubble)
-		end
-	end
-end
-
--- a Frame to watch speech bubbles and hide anything said by Ban-Lu
-local BubbleWatcher = CreateFrame("Frame")
--- function to reset the watcher
-BubbleWatcher.Reset = function(self)
-	self:Hide()
-	self.elapsed = 0
-end
--- init
-BubbleWatcher:Reset()
 
 -- timer function to check the bubbles
 BubbleWatcher:SetScript("OnUpdate", function(self, elapsed)
@@ -106,7 +97,12 @@ BubbleWatcher:SetScript("OnUpdate", function(self, elapsed)
 	-- have to wait because bubbles show up the frame after the chat event
 	if self.elapsed > 0.01 then
 		self:Reset()
-		checkChatBubbles(C_ChatBubbles:GetAllChatBubbles())
+		-- iterate through all bubbles we're allowed to modify and check each one
+		for _, chatBubble in pairs(C_ChatBubbles:GetAllChatBubbles()) do
+			if not chatBubble:IsForbidden() then
+				self:CheckChatBubble(chatBubble)
+			end
+		end
 	end
 end)
 
