@@ -49,7 +49,7 @@ MuteSoundFile(1593228)
 MuteSoundFile(1593229)
 MuteSoundFile(1593236)
 
--- things Ban-Lu says
+-- things Ban-Lu says (key: message, value: true)
 local banLuMessages = {}
 
 -- returns the text contained within a currently displayed chat bubble
@@ -58,7 +58,7 @@ local function getChatBubbleText(chatBubble)
 	local chatBubbleFrame = chatBubble:GetChildren()
 	for i = 1, chatBubbleFrame:GetNumRegions() do
 		local region = select(i, chatBubbleFrame:GetRegions())
-		-- only the bubble region with text will have ObjectType == FontString
+		-- only the bubble region with text will be a FontString
 		if region:GetObjectType() == "FontString" then
 			return region:GetText()
 		end
@@ -68,20 +68,16 @@ end
 -- check an individual bubble to see if Ban-Lu is talking
 local function checkChatBubble(chatBubble)
 	local message = getChatBubbleText(chatBubble)
-
-	-- only Ban-Lu's messages will be in this table (author will always be Ban-Lu)
-	local author = banLuMessages[message]
-
-	if author == banLuName and not chatBubble.banlu then
+	if banLuMessages[message] and not chatBubble.banLu then
 		-- this bubble isn't hidden already, and Ban-Lu said the line contained within, hide the frame
-		local chatBubbleFrame = select(1, chatBubble:GetChildren())
+		local chatBubbleFrame = chatBubble:GetChildren()
 		chatBubbleFrame:Hide()
-		chatBubble.banlu = true
-	elseif author ~= banLuName and chatBubble.banlu then
+		chatBubble.banLu = true
+	elseif not banLuMessages[message] and chatBubble.banLu then
 		-- the author is not Ban-Lu but the frame is hidden, show the frame
-		local chatBubbleFrame = select(1, chatBubble:GetChildren())
+		local chatBubbleFrame = chatBubble:GetChildren()
 		chatBubbleFrame:Show()
-		chatBubble.banlu = nil
+		chatBubble.banLu = nil
 	end
 end
 
@@ -117,7 +113,7 @@ end)
 -- filter Ban-Lu's spam from chat, and any chat bubbles he might produce
 local function maybeBanLuFilter(_, _, message, author, ...)
 	if author == banLuName then
-		banLuMessages[message] = author
+		banLuMessages[message] = true
 		BubbleWatcher:Show()
 		-- returning true filters the message from chat
 		return true
