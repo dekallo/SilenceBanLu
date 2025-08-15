@@ -1,11 +1,11 @@
 local addonName = ...
 
 -- globals
-local CreateFrame, C_ChatBubbles, UnitClassBase, C_AddOns, UnitName, MuteSoundFile, ChatFrame_AddMessageEventFilter, GetLocale = CreateFrame, C_ChatBubbles, UnitClassBase, C_AddOns, UnitName, MuteSoundFile, ChatFrame_AddMessageEventFilter, GetLocale
+local CreateFrame, C_ChatBubbles, UnitClassBase, C_AddOns, UnitGUID, MuteSoundFile, ChatFrame_AddMessageEventFilter, GetLocale = CreateFrame, C_ChatBubbles, UnitClassBase, C_AddOns, UnitGUID, MuteSoundFile, ChatFrame_AddMessageEventFilter, GetLocale
 
 -- disable the addon for non-Monk players
 if UnitClassBase("player") ~= "MONK" then
-	C_AddOns.DisableAddOn(addonName, UnitName("player"))
+	C_AddOns.DisableAddOn(addonName, UnitGUID("player"))
 	return
 end
 
