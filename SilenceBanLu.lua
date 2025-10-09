@@ -91,7 +91,7 @@ end
 BubbleWatcher:SetScript("OnUpdate", function(self, elapsed)
 	self.elapsed = self.elapsed + elapsed
 	-- have to wait because bubbles show up the frame after the chat event
-	if self.elapsed > 0.01 then
+	if self.elapsed > 0 then
 		self:Reset()
 		-- iterate through all bubbles we're allowed to modify and check each one
 		for _, chatBubble in pairs(C_ChatBubbles.GetAllChatBubbles()) do
@@ -130,12 +130,23 @@ do
 		return false, message, ...
 	end
 
-	-- Ban-Lu is a monster so he talks in MONSTER_SAY
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_MONSTER_SAY", maybeBanLuFilter)
+	if ChatFrameUtil and ChatFrameUtil.AddMessageEventFilter then -- Midnight
+		-- Ban-Lu is a monster so he talks in MONSTER_SAY
+		ChatFrameUtil.AddMessageEventFilter("CHAT_MSG_MONSTER_SAY", maybeBanLuFilter)
 
-	-- the chat events which can create bubbles which are guaranteed not to be Ban-Lu
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_SAY", notBanLuFilter)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY", notBanLuFilter)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_YELL", notBanLuFilter)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_MONSTER_YELL", notBanLuFilter)
+		-- the chat events which can create bubbles which are guaranteed not to be Ban-Lu
+		ChatFrameUtil.AddMessageEventFilter("CHAT_MSG_SAY", notBanLuFilter)
+		ChatFrameUtil.AddMessageEventFilter("CHAT_MSG_PARTY", notBanLuFilter)
+		ChatFrameUtil.AddMessageEventFilter("CHAT_MSG_YELL", notBanLuFilter)
+		ChatFrameUtil.AddMessageEventFilter("CHAT_MSG_MONSTER_YELL", notBanLuFilter)
+	else -- pre-Midnight
+		-- Ban-Lu is a monster so he talks in MONSTER_SAY
+		ChatFrame_AddMessageEventFilter("CHAT_MSG_MONSTER_SAY", maybeBanLuFilter)
+
+		-- the chat events which can create bubbles which are guaranteed not to be Ban-Lu
+		ChatFrame_AddMessageEventFilter("CHAT_MSG_SAY", notBanLuFilter)
+		ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY", notBanLuFilter)
+		ChatFrame_AddMessageEventFilter("CHAT_MSG_YELL", notBanLuFilter)
+		ChatFrame_AddMessageEventFilter("CHAT_MSG_MONSTER_YELL", notBanLuFilter)
+	end
 end

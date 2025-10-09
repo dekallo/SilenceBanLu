@@ -8,6 +8,7 @@ globals = {
     "C_AddOns",
     "C_ChatBubbles",
     "ChatFrame_AddMessageEventFilter",
+    "ChatFrameUtil",
     "CreateFrame",
     "GetLocale",
     "MuteSoundFile",
