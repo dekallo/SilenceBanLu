@@ -1,6 +1,3 @@
-ignore:
-    - README.md
-
 plain-copy:
     - "*.lua"
     - "*.md"
