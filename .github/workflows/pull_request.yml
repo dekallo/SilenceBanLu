@@ -1,15 +1,11 @@
 name: Check Pull Request
-
 on: [pull_request]
-
 jobs:
   test:
     runs-on: ubuntu-latest
-
     steps:
       - name: Clone project
-        uses: actions/checkout@v5
-
+        uses: actions/checkout@v6
       - name: Run luacheck
         uses: BigWigsMods/actions/luacheck@master
         with:
