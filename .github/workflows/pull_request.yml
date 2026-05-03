@@ -7,6 +7,6 @@ jobs:
       - name: Clone project
         uses: actions/checkout@v6
       - name: Run luacheck
-        uses: BigWigsMods/actions/luacheck@master
+        uses: BigWigsMods/luacheck@main
         with:
           args: -q
